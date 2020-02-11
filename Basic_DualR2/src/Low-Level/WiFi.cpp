@@ -57,6 +57,10 @@
 //--------------------------------------------------------------------------------------------------
 void WIFI_Init(void)
 {
+    if (DEBUG_WIFI)
+    {
+        Serial.println("WPS config start");
+    }
     WiFi.mode(WIFI_STA);
 }
 
@@ -65,7 +69,7 @@ bool WIFI_WPSProcess(void)
 
     if (DEBUG_WIFI)
     {
-        Serial.println("WPS config start");
+        Serial.println(WiFi.macAddress());
     }
     bool wpsSuccess = WiFi.beginWPSConfig();
 

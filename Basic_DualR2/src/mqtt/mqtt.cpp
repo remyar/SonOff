@@ -61,11 +61,13 @@ void _processMessage(char *topic, byte *payload, unsigned int length)
 {
     //-- topic
     String receivedTopic = String(topic);
-    receivedTopic.replace((WIFI_GetMacAddress() + "/Switch").c_str() , "");
-    receivedTopic.replace("/" , "");
+    String macAddr = WIFI_GetMacAddress();
+    macAddr.replace(":", "");
+    receivedTopic.replace((macAddr + "/Switch").c_str(), "");
+    receivedTopic.replace("/", "");
 
     int relai = atoi(receivedTopic.c_str());
-
+    relai = (relai > 0) ? relai - 1 : relai;
     //-- valeur
     char tab[32];
     memset(tab, 0, 32);
@@ -73,16 +75,17 @@ void _processMessage(char *topic, byte *payload, unsigned int length)
     {
         tab[i] = (char)payload[i];
     }
+    bool state = atoi(tab);
 
     if (DEBUG_MQTT)
     {
         Serial.println("MQTT_MESSAGE_RECEIVED");
         Serial.println(topic);
-        Serial.println(tab);
+        Serial.println(relai);
+        Serial.println(state);
     }
 
-    bool state = atoi(tab);
-    RELAI_SetSate(relai , state);
+    RELAI_SetSate(relai, state);
 }
 
 //------------------------------------------------------------------------------------------------//
@@ -143,9 +146,8 @@ void MQTT_TaskRun(void)
             // subscribe to all topics
             String str = WIFI_GetMacAddress();
             str.replace(":", "");
+            client.subscribe((str + "/Switch/#").c_str());
             client.subscribe((str + "/Switch").c_str());
-            client.subscribe((str + "/Switch/1").c_str());
-            client.subscribe((str + "/Switch/2").c_str());
             eMqttState = MQTT_CONNECT_SUCCESS;
             if (DEBUG_MQTT)
             {
