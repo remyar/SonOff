@@ -192,3 +192,12 @@ void MQTT_Publish(String topic, String value)
 {
     client.publish(topic.c_str(), value.c_str());
 }
+
+void MQTT_SendRelaiState(bool value)
+{
+
+    String str = WIFI_GetMacAddress();
+    str.replace(":", "");
+
+    MQTT_Publish((str + "/set/Switch").c_str() ,value ? "1" : "0" );
+}

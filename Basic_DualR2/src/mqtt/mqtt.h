@@ -45,5 +45,6 @@ void MQTT_TaskInit(void);
 void MQTT_TaskRun(void);
 bool MQTT_IsConnected(void);
 void MQTT_Publish(String topic , String value);
+void MQTT_SendRelaiState(bool value);
 
 #endif //--- _BOARD_

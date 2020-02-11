@@ -13,6 +13,7 @@
 //================================================================================================//
 
 #include "relay.h"
+#include "../mqtt/mqtt.h"
 
 //================================================================================================//
 //                                            DEFINES                                             //
@@ -76,6 +77,7 @@ void RELAI_TaskRun(void)
 void RELAI_SetSate(byte relai , bool state)
 {
     sRelais[relai].state = state;
+    MQTT_SendRelaiState(state);
 }
 
 bool RELAI_GetState(byte relai){
